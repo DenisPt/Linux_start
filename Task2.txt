@@ -1,0 +1,12 @@
+------------------1------------------
+denis@denis-VirtualBox:~$ ls > file1                          создали 1й файл и заполнили его какой-то информацией
+denis@denis-VirtualBox:~$ wc file1 > file2                    создали 2й файл и заполнили его какой-то информацией
+denis@denis-VirtualBox:~$ cat file1 >> cat file2 > file3      объединили оба в файла в 3й
+denis@denis-VirtualBox:~$ cat file3                           посмотрели содержимое нового файла
+denis@denis-VirtualBox:~$ cat file3 > newfile3                скопировали содержимое файл в новый
+
+
+------------------2------------------
+denis@denis-VirtualBox:~$ find ~ -name '.*' | wc -l           выводим количество скрытых файлов в домашнем каталоге
+
+
