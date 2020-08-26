@@ -1,0 +1,37 @@
+---------------------------------1---------------------------------
+nano // ввод в первом терминале
+ps aux | grep nano // вводим в другом терминале, чтобы узнать PID процесса nano
+kill -s SIGHUP 2599 // в первом терминале появляется надпись "Received SIGHUP or SIGTERM"
+nano // ввод в первом терминале
+ps aux | grep nano // вводим в другом терминале, чтобы узнать PID процесса nano
+kill -s SIGTERM 2602 // в первом терминале появляется надпись "Received SIGHUP or SIGTERM"
+nano // ввод в первом терминале
+ps aux | grep nano // вводим в другом терминале, чтобы узнать PID процесса nano
+kill -s SIGSEGV 2606 // в первом терминале появляется надпись "Sorry! Nano crashed!  Code: 11.  Please report a bug."
+nano // ввод в первом терминале
+ps aux | grep nano // вводим в другом терминале, чтобы узнать PID процесса nano
+kill -s SIGILL 2609 // в первом терминале появляется надпись "Illegal instruction (core dumped)", интерфейс nano с подсказками снизу остается, но появляется терминальная строка
+
+---------------------------------2---------------------------------
+//ctrl+c передает сигнал SIGINT выполняя прерывание (убивание) процесса
+//ctrl+d передает сигнал EOF регистрируя окончание файла, или окончание ввода, если ввод был ручной
+
+denis@denis-VirtualBox:~$ cat > file1
+sssd
+ffafsa
+
+//вводим ctrl+d и ввод завершается, если проверить файл file1, то увидим:
+denis@denis-VirtualBox:~$ cat file1
+sssd
+ffafsa
+//т.о. содержимае записалось вплоть до нажатия ctrl+d
+
+---------------------------------3---------------------------------
+denis@denis-VirtualBox:~$ sudo vim -f /etc/ssh/sshd_config // меняем нужную строку
+denis@denis-VirtualBox:~$ systemctl restart sshd
+denis@denis-VirtualBox:~$ sudo vim -f /etc/ssh/sshd_config // меняем нужную строку
+denis@denis-VirtualBox:~$ systemctl reload sshd
+
+restart убивает процесс и запускает заново, reload заставляет перечитать конфигурационный файл, т.е. применить новые настройки не убивая процесс
+разницу можно увидеть введя pas aux | grep sshd перед выполнением restart и после выполнения restart PID у sshd поменяется
+если ввести ту же команду pas aux | grep sshd перед выполнением reload и после выполнения reload PID у sshd не поменяется
