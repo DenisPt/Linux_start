@@ -1,0 +1,63 @@
+----------------------------------1----------------------------------
+echo file content > file1 // в файле записано "file content"
+cat file1 > file2 // копируем 
+ln -s file1 file3 // создали символическую ссылку
+ln file1 file4 // создали жесткую ссылку
+ls -li | grep file // смотрим inode
+/*
+290660 -rw-rw-r-- 2 denis denis   13 авг 29 12:09 file1
+269358 -rw-rw-r-- 1 denis denis   13 авг 29 12:10 file2
+279120 lrwxrwxrwx 1 denis denis    5 авг 29 12:11 file3 -> file1   //видим символическую ссылку
+290660 -rw-rw-r-- 2 denis denis   13 авг 29 12:09 file4            //видим, что файл ссылается на то же место,что file1, т.е. это жесткая ссылка
+*/
+
+rm file1 //удаляем file1
+
+/* команды cat file2 и cat file4 покажут содержимое исходного фалйа
+при попытке ввести cat file3 увидим сообщение "cat: file3: No such file or directory"
+т.о. file2 и file4 ссылаются хоть и на разные места на диске, но показывают информацию, file3 становится "битой ссылкой" т.к. удален file1, на который она ссылалась
+*/
+rm file* // удаляем оставшиеся файлы
+
+
+----------------------------------2----------------------------------
+ls > file1 // записали содержимое текущей директории в file1
+ln -s file1 file1_link // создаем символическую ссылку
+sudo mv file1_link .. // перемещаем файл на директорию выше
+cd .. // перемещаемся туда сами
+cat file1_link  // пытаемся посмотреть содержимое:
+// видим: "cat: file1_link: No such file or directory"
+cd ~ // возвращаемся
+ln -s $(pwd)/file1 file2_link // создаем ссылку с абсолютным путем
+sudo mv file2_link .. // перемещаем файл
+cd ..
+cat file2_link // смотрим содержимое файла file1:
+
+/*
+Desktop
+Documents
+Downloads
+file1
+Music
+Pictures
+Public
+__pycache__
+Templates
+Videos
+*/
+sudo rm file?_link // удаляем ссылки
+sudo rm ~/file1 // удаляем файл
+
+----------------------------------3----------------------------------
+ls -li > file1  //создаем file1
+ls  > file2 //создаем file2
+
+chmod 664 file1 // имеем: -rw-rw-r-- 1 denis denis  624 авг 29 12:31 file1
+chmod a=r file1 // имеем: -r--r--r-- 1 denis denis  624 авг 29 12:31 file1
+chmod ug+w file1 // имеем: -rw-rw-r-- 1 denis denis  624 авг 29 12:31 file1
+
+
+chmod a-rwx file2 // имеем: ---------- 1 denis denis   91 авг 29 12:31 file2
+chmod u+rw file2 // имеем: -rw------- 1 denis denis   91 авг 29 12:31 file2
+    или:
+chmod 600 file2 // имеем: -rw------- 1 denis denis   91 авг 29 12:31 file2
