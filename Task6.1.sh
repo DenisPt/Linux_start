@@ -6,7 +6,7 @@ This script erase empty strings and converts text to uppercase
 EOF
 }
 
-W=0 #for writing in files or not
+W=0 #Будет счетчиком, использовался ли ключ -w в параметрах
 while [[ $# > 0 ]]
 do
         case $1 in
