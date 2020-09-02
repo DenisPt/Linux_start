@@ -1,0 +1,70 @@
+#!/bin/bash -x
+
+manual(){
+        cat << EOF
+This script creates files in directory
+EOF
+}
+
+
+while [[ $# > 0 ]]
+do
+        case $1 in
+                --help)
+                        manual
+                        exit 0
+                ;;
+                -d)
+                        if [[ -n $DIR ]] #Проверяем была ли ранее записана директория, если да - то вызываем ошибку, что указано два параметра -d
+                        then
+                                echo "Dir is specified twice"
+                                exit 1
+                        fi
+                        DIR=$2  #Следующий аргумент за -d записываем в директорию
+                        if [[ -d $DIR && -n $DIR ]]
+                        then
+                                shift
+                        else
+                                echo "Dir not found"
+                                exit 1
+                        fi
+                ;;
+                *)
+                        if [[ -f $1|| -h $1 ]]
+                        then
+                                WRONGS+=($1)
+                        else
+                                FILES+=($1)
+                        fi
+        esac
+        shift
+done
+
+if [[ ${#WRONGS[@]} > 0 ]]
+then
+        echo 'Files exists: '${WRONGS[@]}
+        exit 2
+fi
+if [[ ${#FILES[@]} == 0 ]]
+then
+        echo 'There is no names of files in params'
+        exit 3
+fi
+if [[ -z $DIR ]]
+then
+        echo 'There is no directory in params'
+        exit 1
+fi
+
+ftmp=""
+for file in $FILES
+do
+        touch $DIR'/'$file
+        read ftmp <<< $(echo $file | awk  ' /'.sh'/ {print $1} ') #если файл на конце не имеет расширение .sh, то данная команда в перемменную ftmp положит пустую строку и команда выполняться не будет
+        if [[ -n $ftmp ]]
+        then
+                chmod +x $DIR'/'$file
+        fi
+done
+exit 0
+
