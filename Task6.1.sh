@@ -45,4 +45,5 @@ then
 else
         echo 'There is error parametrs: '${WRONGS[@]}
         exit 1
-                                                                              1,9           Top
+fi
+exit 0
