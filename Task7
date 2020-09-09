@@ -1,0 +1,56 @@
+sudo apt-get update     //обновляем перечень пакетов
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common      //устанавливаем необходимые пакеты
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - // устанавливаем GPG ключ
+sudo apt-key fingerprint 0EBFCD88 //проверяем, что ключ установился верно
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable" // подключаем репозиторий
+   
+sudo apt update // обновляем пакеты
+sudo apt install nginx // устанавливаем nginx
+
+sudo dpkg -r nginx // удаляем nginx:
+###########
+(Reading database ... 155056 files and directories currently installed.)
+Removing nginx (1.18.0-0ubuntu1) ...
+###########
+
+
+-----------------------------------2-----------------------------------
+sudo apt install nginx // Установим снова nginx
+cd /etc/nginx/conf.d/    //Перейдем в папку с конфигурациями
+sudo vim host1.conf // создадим конфигурацию со след.содержимым:
+#######################
+server {
+        listen 80;
+        server_name host1;
+
+        location / {    
+                return 200 "This is host 1";
+        }
+}
+#######################
+
+sudo vim host2.conf // создадим конфигурацию со след.содержимым:
+#######################
+server {
+        listen 80;
+        server_name host2;
+
+        location / {    
+                return 200 "This is host 2";
+        }
+}
+#######################
+
+ // Проверяем:
+denis@denis-VirtualBox:/etc/nginx/conf.d$ curl http://localhost -H 'Host: host1'
+This is host 1denis@denis-VirtualBox:/etc/nginx/conf.d$ curl http://localhost -H 'Host: host2'
+This is host 2denis@denis-VirtualBox:/etc/nginx/conf.d$
